@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroVision · Vastu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#05040f;--panel:#0c0b1e;--border:rgba(180,150,255,.15);--gold:#c9a84c;--gold-light:#f0d080;--violet:#7b5ea7;--violet-bright:#b97fff;--text:#e8e0f0;--text-dim:#9080b0;}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden;}
+        body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 15%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 50% 80%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 85% 45%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 5%,rgba(255,235,180,.8) 0%,transparent 100%);pointer-events:none;z-index:0;}
+        body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 30%,rgba(80,40,120,.25) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 80% 70%,rgba(40,20,100,.2) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+        .navbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(5,4,15,.85);backdrop-filter:blur(12px);}
+        .logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold-light);letter-spacing:.08em;text-decoration:none;text-shadow:0 0 20px rgba(201,168,76,.4);}
+        .nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-family:'Cinzel Decorative',serif;font-size:.62rem;letter-spacing:.1em;padding:8px 13px;border-radius:4px;border:1px solid transparent;transition:all .25s;}
+        .nav-links a:hover,.nav-links a.active{color:var(--gold-light);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08);}
+
+        .container{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:50px 20px 100px;}
+        header{text-align:center;margin-bottom:50px;animation:fadeDown 1s ease both;}
+        .header-ornament{font-size:2rem;color:var(--gold);letter-spacing:1rem;opacity:.7;display:block;margin-bottom:12px;animation:shimmer 4s ease-in-out infinite alternate;}
+        @keyframes shimmer{from{opacity:.5;text-shadow:none;}to{opacity:1;text-shadow:0 0 20px var(--gold-light);}}
+        h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;background:linear-gradient(135deg,var(--gold-light) 0%,var(--violet-bright) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;}
+        .subtitle{font-size:1.1rem;color:var(--text-dim);font-style:italic;margin-top:10px;letter-spacing:.12em;}
+
+        .panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:40px;position:relative;overflow:hidden;animation:fadeUp .6s ease both;}
+        .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--violet-bright),var(--gold),transparent);opacity:.6;}
+        .panel-title{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--gold);letter-spacing:.12em;margin-bottom:28px;display:flex;align-items:center;gap:12px;}
+        .panel-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:.4;}
+
+        .sign-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}
+        .sign-card{border:1px solid var(--border);border-radius:5px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .25s;background:transparent;color:var(--text-dim);font-family:'Cormorant Garamond',serif;}
+        .sign-card:hover{border-color:var(--violet);color:var(--text);background:rgba(123,94,167,.1);transform:translateY(-2px);}
+        .sign-card.selected{border-color:var(--gold);color:var(--gold-light);background:rgba(201,168,76,.08);box-shadow:0 0 15px rgba(201,168,76,.15);}
+        .sign-card .card-symbol{font-size:1.4rem;display:block;margin-bottom:4px;}
+        .sign-card .card-name{font-size:.75rem;letter-spacing:.05em;}
+
+        .btn{width:100%;padding:16px;background:linear-gradient(135deg,rgba(123,94,167,.4),rgba(201,168,76,.2));border:1px solid rgba(201,168,76,.4);border-radius:4px;color:var(--gold-light);font-family:'Cinzel Decorative',serif;font-size:.8rem;letter-spacing:.2em;cursor:pointer;transition:all .3s;position:relative;}
+        .btn:hover{border-color:var(--gold);box-shadow:0 0 25px rgba(201,168,76,.25);transform:translateY(-1px);}
+
+        .result{margin-top:36px;display:none;animation:revealResult .6s ease both;}
+        .result.show{display:block;}
+        @keyframes revealResult{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+        /* Sign header in result */
+        .result-header{text-align:center;margin-bottom:28px;}
+        .result-sign-name{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--gold-light);}
+        .result-sub{color:var(--text-dim);font-style:italic;font-size:1rem;margin-top:6px;}
+
+        /* Vastu tip cards */
+        .tips-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+        .tip-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:24px;display:flex;gap:20px;align-items:flex-start;animation:popIn .5s ease both;transition:border-color .25s,transform .25s;}
+        .tip-card:nth-child(2){animation-delay:.1s;} .tip-card:nth-child(3){animation-delay:.2s;}
+        .tip-card:hover{border-color:rgba(201,168,76,.3);transform:translateX(4px);}
+
+        .tip-icon{font-size:2.2rem;flex-shrink:0;margin-top:2px;filter:drop-shadow(0 0 8px rgba(201,168,76,.3));}
+        .tip-body{}
+        .tip-direction{font-family:'Cinzel Decorative',serif;font-size:.7rem;letter-spacing:.16em;color:var(--violet-bright);margin-bottom:6px;}
+        .tip-text{font-size:1.05rem;color:var(--text);line-height:1.6;margin-bottom:8px;}
+        .tip-element{display:inline-block;font-size:.72rem;letter-spacing:.1em;color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:3px 12px;font-family:'Cinzel Decorative',serif;}
+
+        @keyframes popIn{from{opacity:0;transform:translateX(-12px);}to{opacity:1;transform:translateX(0);}}
+        @keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+        @media(max-width:600px){.sign-grid{grid-template-columns:repeat(3,1fr);}.navbar{padding:14px 20px;flex-direction:column;gap:12px;}.panel{padding:24px 18px;}.tip-card{flex-direction:column;gap:10px;}}
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="logo" href="../index.html">✨ AstroVision</a>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../zodiac/zodiac.html">Zodiac</a>
+        <a href="../compatibility/compatibility.html">Compatibility</a>
+        <a href="../lucky/lucky_number.html">Lucky</a>
+        <a href="vastu.html" class="active">Vastu</a>
+        <a href="../tarot_cards/tarot.html">Tarot</a>
+    </div>
+</nav>
+
+<div class="container">
+    <header>
+        <span class="header-ornament">🏠 🏠 🏠</span>
+        <h1>Vastu Shastra</h1>
+        <p class="subtitle">Align your home with the energy of your sign</p>
+    </header>
+
+    <div class="panel">
+        <div class="panel-title">Select Your Sign</div>
+        <div class="sign-grid" id="sign-grid"></div>
+        <button class="btn" onclick="getVastu()">🏠 Reveal My Vastu Tips 🏠</button>
+
+        <div class="result" id="result">
+            <div class="result-header">
+                <div class="result-sign-name" id="result-sign-name"></div>
+                <div class="result-sub">Personalised Vastu tips for your home</div>
+            </div>
+            <div class="tips-grid" id="tips-grid"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SIGNS=[{name:"Aries",symbol:"♈"},{name:"Taurus",symbol:"♉"},{name:"Gemini",symbol:"♊"},{name:"Cancer",symbol:"♋"},{name:"Leo",symbol:"♌"},{name:"Virgo",symbol:"♍"},{name:"Libra",symbol:"♎"},{name:"Scorpio",symbol:"♏"},{name:"Sagittarius",symbol:"♐"},{name:"Capricorn",symbol:"♑"},{name:"Aquarius",symbol:"♒"},{name:"Pisces",symbol:"♓"}];
+    const grid=document.getElementById('sign-grid');
+    let selected=null;
+    SIGNS.forEach((s,i)=>{
+        const c=document.createElement('button');
+        c.className='sign-card';
+        c.innerHTML=`<span class="card-symbol">${s.symbol}</span><span class="card-name">${s.name}</span>`;
+        c.onclick=()=>{document.querySelectorAll('.sign-card').forEach(x=>x.classList.remove('selected'));c.classList.add('selected');selected=i;document.getElementById('result').classList.remove('show');};
+        grid.appendChild(c);
+    });
+
+    const API='http://localhost:8080';
+    let toastTimer=null;
+
+    function notify(message){
+        let toast=document.getElementById('app-toast');
+        if(!toast){
+            toast=document.createElement('div');
+            toast.id='app-toast';
+            toast.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,140,140,.45);background:rgba(30,10,20,.92);color:#ffd4d4;font-family:serif;font-size:15px;opacity:0;transition:opacity .2s ease;';
+            document.body.appendChild(toast);
+        }
+        toast.textContent=message;
+        toast.style.opacity='1';
+        clearTimeout(toastTimer);
+        toastTimer=setTimeout(()=>{toast.style.opacity='0';},2600);
+    }
+
+    async function getVastu(){
+        if(selected===null){notify('Please select your zodiac sign.');return;}
+        const sign=SIGNS[selected].name;
+        const btn=document.querySelector('.btn');
+        btn.textContent='⟳ Reading the energy of your home…';btn.disabled=true;
+        try{
+            const res=await fetch(`${API}/vastu?sign=${sign}`);
+            const data=await res.json();
+
+            document.getElementById('result-sign-name').textContent=`${data.symbol}  ${data.sign}`;
+
+            const tg=document.getElementById('tips-grid');
+            tg.innerHTML='';
+            data.tips.forEach(t=>{
+                const card=document.createElement('div');
+                card.className='tip-card';
+                card.innerHTML=`
+                    <div class="tip-icon">${t.icon}</div>
+                    <div class="tip-body">
+                        <div class="tip-direction">${t.direction}</div>
+                        <div class="tip-text">${t.tip}</div>
+                        <span class="tip-element">${t.element}</span>
+                    </div>`;
+                tg.appendChild(card);
+            });
+
+            const r=document.getElementById('result');
+            r.classList.remove('show');
+            requestAnimationFrame(()=>r.classList.add('show'));
+        }catch(e){
+            notify('Cannot reach backend. Ensure zodiac_server is running on port 8080.');
+        }finally{
+            btn.textContent='🏠 Reveal My Vastu Tips 🏠';btn.disabled=false;
+        }
+    }
+</script>
+</body>
+</html>

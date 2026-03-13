@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroVision · Signs & Destiny</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #05040f;
+            --panel: #0c0b1e;
+            --border: rgba(180, 150, 255, 0.15);
+            --gold: #c9a84c;
+            --gold-light: #f0d080;
+            --violet: #7b5ea7;
+            --violet-bright: #b97fff;
+            --text: #e8e0f0;
+            --text-dim: #9080b0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Starfield ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 85% 35%, rgba(255,255,255,.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 20% 85%, rgba(255,255,255,.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 50%, rgba(255,255,255,.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 45% 90%, rgba(255,255,255,.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 15% 45%, rgba(255,255,255,.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 25%, rgba(255,255,255,.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 35% 30%, rgba(255,255,255,.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at  5% 65%, rgba(255,255,255,.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 95% 55%, rgba(255,255,255,.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 15%, rgba(255,255,255,.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 65% 40%, rgba(255,255,255,.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,.7) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 40%  5%, rgba(255,235,180,.8) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 92% 80%, rgba(180,200,255,.8) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 30%, rgba(80,40,120,.25) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 80% 70%, rgba(40,20,100,.2)  0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 60% 10%, rgba(100,60,140,.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 40px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(5, 4, 15, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: fadeDown 0.8s ease both;
+        }
+
+        .logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 20px rgba(201,168,76,.4);
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            padding: 8px 13px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+            border-color: rgba(201,168,76,.3);
+            background: rgba(201,168,76,.06);
+        }
+
+        .nav-links a.active {
+            color: var(--gold-light);
+            border-color: rgba(201,168,76,.4);
+            background: rgba(201,168,76,.08);
+        }
+
+        /* ── Main Container ── */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 50px 20px 100px;
+        }
+
+        /* ── Header ── */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeDown 1s ease both;
+        }
+
+        .header-ornament {
+            font-size: 2rem;
+            color: var(--gold);
+            letter-spacing: 1rem;
+            opacity: .7;
+            display: block;
+            margin-bottom: 12px;
+            animation: shimmer 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes shimmer {
+            from { opacity:.5; text-shadow:none; }
+            to   { opacity:1;  text-shadow:0 0 20px var(--gold-light); }
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2rem,6vw,3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--violet-bright) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            letter-spacing: 0.04em;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-style: italic;
+            margin-top: 10px;
+            letter-spacing: 0.12em;
+        }
+
+        /* ── Section Label ── */
+        .section-label {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.68rem;
+            color: var(--gold);
+            letter-spacing: 0.22em;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: fadeUp 1s 0.2s ease both;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+        }
+
+        .section-label::before { background: linear-gradient(90deg, rgba(201,168,76,.4), transparent); }
+        .section-label::after  { background: linear-gradient(90deg, transparent, rgba(201,168,76,.4)); }
+
+        /* ── Feature Cards ── */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 52px;
+            animation: fadeUp 1s 0.3s ease both;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px 16px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.28s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(201,168,76,.35);
+            background: rgba(123,94,167,.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(123,94,167,.2), 0 0 0 1px rgba(201,168,76,.1);
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card-icon { font-size: 1.9rem; display: block; }
+
+        .card h2 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.06em;
+        }
+
+        .card p {
+            font-size: 0.83rem;
+            color: var(--text-dim);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .card-link {
+            margin-top: 6px;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.58rem;
+            letter-spacing: 0.12em;
+            color: var(--violet-bright);
+            border: 1px solid rgba(185,127,255,.3);
+            border-radius: 20px;
+            padding: 5px 14px;
+            transition: all 0.2s;
+        }
+
+        .card:hover .card-link {
+            background: rgba(185,127,255,.12);
+            border-color: rgba(185,127,255,.6);
+            color: var(--gold-light);
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,168,76,.3), rgba(185,127,255,.3), transparent);
+            margin-bottom: 48px;
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 36px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            animation: fadeUp 1s 0.4s ease both;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            padding: 16px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(123,94,167,.2), rgba(201,168,76,.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tab-btn.active { color: var(--gold-light); background: rgba(123,94,167,.15); }
+        .tab-btn.active::before { opacity: 1; }
+        .tab-btn:not(:last-child) { border-right: 1px solid var(--border); }
+
+        /* ── Panels ── */
+        .panel {
+            display: none;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .panel.active { display: block; }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--violet-bright), var(--gold), transparent);
+            opacity: 0.6;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        label {
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 400;
+        }
+
+        input, select {
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            padding: 12px 16px;
+            outline: none;
+            transition: all 0.3s;
+            width: 100%;
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--violet);
+            box-shadow: 0 0 0 3px rgba(123,94,167,.2), 0 0 15px rgba(123,94,167,.1);
+            background: rgba(123,94,167,.07);
+        }
+
+        input::placeholder { color: rgba(144,128,176,.5); }
+        select option { background: #0c0b1e; }
+
+        .btn {
+            margin-top: 28px;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(123,94,167,.4), rgba(201,168,76,.2));
+            border: 1px solid rgba(201,168,76,.4);
+            border-radius: 4px;
+            color: var(--gold-light);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(185,127,255,.2), rgba(240,208,128,.15));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover { border-color: var(--gold); box-shadow: 0 0 25px rgba(201,168,76,.25), 0 0 50px rgba(123,94,167,.15); transform: translateY(-1px); }
+        .btn:hover::after { opacity: 1; }
+        .btn:active { transform: translateY(0); }
+
+        .result {
+            margin-top: 32px;
+            padding: 28px;
+            border: 1px solid rgba(201,168,76,.25);
+            border-radius: 6px;
+            background: rgba(201,168,76,.04);
+            display: none;
+            animation: revealResult 0.6s ease both;
+        }
+
+        .result.show { display: block; }
+
+        @keyframes revealResult {
+            from { opacity:0; transform:scale(.97) translateY(8px); }
+            to   { opacity:1; transform:scale(1)  translateY(0); }
+        }
+
+        .result-sign {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.6rem,4vw,2.4rem);
+            background: linear-gradient(135deg, var(--gold-light), var(--violet-bright));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sign-symbol { font-size: 2.2rem; -webkit-text-fill-color: var(--gold); }
+
+        .result-info {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 1rem;
+            font-style: italic;
+            line-height: 1.7;
+        }
+
+        .result-person { font-size: .9rem; color: var(--text-dim); margin-bottom: 8px; }
+
+        .sign-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 28px; }
+
+        .sign-card {
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 12px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: .95rem;
+        }
+
+        .sign-card:hover { border-color: var(--violet); color: var(--text); background: rgba(123,94,167,.1); transform: translateY(-2px); }
+        .sign-card.selected { border-color: var(--gold); color: var(--gold-light); background: rgba(201,168,76,.08); box-shadow: 0 0 15px rgba(201,168,76,.15); }
+        .sign-card .card-symbol { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .sign-card .card-name   { font-size: .75rem; letter-spacing: .05em; }
+
+        .career-result {
+            padding: 24px;
+            border: 1px solid rgba(185,127,255,.2);
+            border-radius: 6px;
+            background: rgba(123,94,167,.06);
+            display: none;
+            animation: revealResult 0.5s ease both;
+        }
+
+        .career-result.show { display: block; }
+        .career-title { font-family: 'Cinzel Decorative', serif; font-size: 1.2rem; color: var(--violet-bright); margin-bottom: 14px; }
+        .career-list  { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .career-tag {
+            background: rgba(123,94,167,.2);
+            border: 1px solid rgba(123,94,167,.4);
+            border-radius: 20px;
+            padding: 7px 18px;
+            font-size: .95rem;
+            color: var(--text);
+            font-style: italic;
+            animation: popIn 0.4s ease both;
+        }
+
+        .career-tag:nth-child(2) { animation-delay:.08s; }
+        .career-tag:nth-child(3) { animation-delay:.16s; }
+
+        @keyframes popIn {
+            from { opacity:0; transform:scale(.85); }
+            to   { opacity:1; transform:scale(1); }
+        }
+
+        /* ── Kundli Styles ── */
+        .kundali-card { background: rgba(201,168,76,.04); border: 1px solid rgba(201,168,76,.2); border-radius: 8px; padding: 28px; }
+        .kundali-header { text-align: center; margin-bottom: 24px; }
+        .kundali-name { font-family: 'Cinzel Decorative', serif; font-size: 1.8rem; color: var(--gold-light); margin-bottom: 8px; }
+        .kundali-detail { font-size: 1rem; color: var(--text-dim); margin-bottom: 4px; line-height: 1.6; }
+        .kundali-zodiac { color: var(--gold-light); margin-top: 12px; font-size: 1.1rem; letter-spacing: .05em; }
+        .quotes-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .quotes-title { font-family: 'Cinzel Decorative', serif; font-size: .9rem; color: var(--gold); letter-spacing: .12em; margin-bottom: 16px; text-transform: uppercase; }
+        .quote-item { background: rgba(123,94,167,.05); border-left: 3px solid var(--gold); padding: 16px; margin-bottom: 12px; border-radius: 4px; font-style: italic; color: var(--text); line-height: 1.6; }
+        .quote-item:before { content: '✨ '; color: var(--gold-light); }
+        .special-message { text-align: center; margin-top: 24px; padding: 20px; border: 1px solid rgba(185,127,255,.2); border-radius: 6px; background: rgba(123,94,167,.06); font-size: 1.05rem; color: var(--violet-bright); font-style: italic; line-height: 1.8; }
+
+        .panel-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: .9rem;
+            color: var(--gold);
+            letter-spacing: .12em;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--gold),transparent); opacity:.4; }
+
+        .error-msg { color:#ff7777; font-size:.9rem; font-style:italic; margin-top:10px; display:none; }
+        .error-msg.show { display:block; }
+
+        @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
+
+        /* ── Responsive ── */
+        @media (max-width: 760px) {
+            .navbar { padding: 14px 20px; flex-direction: column; gap: 12px; }
+            .card-container { grid-template-columns: repeat(2,1fr); }
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full { grid-column: 1; }
+            .sign-grid { grid-template-columns: repeat(3,1fr); gap:7px; }
+            .panel { padding: 24px 18px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══ Navbar ══ -->
+    <nav class="navbar">
+        <div class="logo">✨ AstroVision</div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="zodiac/zodiac.html">Zodiac</a>
+            <a href="compatibility/compatibility.html">Compatibility</a>
+            <a href="lucky/lucky_number.html">Lucky</a>
+            <a href="vastu/vastu.html">Vastu</a>
+            <a href="tarot_cards/tarot.html">Tarot</a>
+            <a href="kundali/kundali.html">Kundli</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- ══ Header ══ -->
+        <header>
+            <span class="header-ornament">✦ ✦ ✦</span>
+            <h1>AstroVision</h1>
+            <p class="subtitle">Signs of the Cosmos &amp; Paths of Destiny</p>
+        </header>
+
+        <!-- ══ Feature Cards ══ -->
+        <div class="section-label">Explore the Cosmos</div>
+
+        <div class="card-container">
+            <a class="card" href="zodiac/zodiac.html">
+                <span class="card-icon">♈</span>
+                <h2>Zodiac</h2>
+                <p>Discover zodiac personality traits</p>
+                <span class="card-link">Explore →</span>
+            </a>
+            <a class="card" href="compatibility/compatibility.html">
+                <span class="card-icon">❤️</span>
+                <h2>Compatibility</h2>
+                <p>Check love compatibility</p>
+                <span class="card-link">Check →</span>
+            </a>
+            <a class="card" href="lucky/lucky_number.html">
+                <span class="card-icon">🍀</span>
+                <h2>Lucky Number</h2>
+                <p>Find your lucky number</p>
+                <span class="card-link">Find →</span>
+            </a>
+            <a class="card" href="lucky/lucky_colour.html">
+                <span class="card-icon">🎨</span>
+                <h2>Lucky Colour</h2>
+                <p>Know your lucky colour</p>
+                <span class="card-link">See →</span>
+            </a>
+            <a class="card" href="tarot_cards/tarot.html">
+                <span class="card-icon">🃏</span>
+                <h2>Tarot</h2>
+                <p>Reveal tarot card guidance</p>
+                <span class="card-link">Draw →</span>
+            </a>
+            <a class="card" href="vastu/vastu.html">
+                <span class="card-icon">🏠</span>
+                <h2>Vastu</h2>
+                <p>Positive energy home tips</p>
+                <span class="card-link">Learn →</span>
+            </a>
+            <a class="card" href="kundali/kundali.html">
+                <span class="card-icon">📜</span>
+                <h2>Kundli</h2>
+                <p>Generate your birth chart</p>
+                <span class="card-link">Generate →</span>
+            </a>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ══ Birth Chart Tools ══ -->
+        <div class="section-label">Birth Chart Tools</div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('sign')">⊛ Discover Your Sign</button>
+            <button class="tab-btn" onclick="switchTab('career')">⊕ Career Guidance</button>
+            <button class="tab-btn" onclick="switchTab('kundli')">🔮 Generate Kundli</button>
+        </div>
+
+        <!-- SIGN PANEL -->
+        <div class="panel active" id="panel-sign">
+            <div class="panel-title">Birth Chart Reading</div>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Full Name</label>
+                    <input type="text" id="name" placeholder="Your name…">
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="age" placeholder="Age" min="0" max="120">
+                </div>
+                <div class="form-group">
+                    <label>Place of Birth</label>
+                    <input type="text" id="place" placeholder="City, Country…">
+                </div>
+                <div class="form-group">
+                    <label>Birth Day</label>
+                    <input type="number" id="day" placeholder="DD" min="1" max="31">
+                </div>
+                <div class="form-group">
+                    <label>Birth Month</label>
+                    <select id="month">
+                        <option value="">— Select Month —</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+            </div>
+            <p class="error-msg" id="sign-error">Please fill in all required fields with valid values.</p>
+            <button class="btn" onclick="getSign()">✦ Reveal My Sign ✦</button>
+            <div class="result" id="sign-result">
+                <div class="result-person" id="result-person"></div>
+                <div class="result-sign">
+                    <span class="sign-symbol" id="result-symbol"></span>
+                    <span id="result-sign-name"></span>
+                </div>
+                <div class="result-info" id="result-description"></div>
+            </div>
+        </div>
+
+        <!-- CAREER PANEL -->
+        <div class="panel" id="panel-career">
+            <div class="panel-title">Career Alignment</div>
+            <div class="sign-grid" id="sign-grid"></div>
+            <button class="btn" onclick="getCareer()" style="margin-top:0">⊕ Reveal Career Path ⊕</button>
+            <div class="career-result" id="career-result">
+                <div class="career-title" id="career-sign-title"></div>
+                <div class="career-list" id="career-list"></div>
+            </div>
+        </div>
+
+        <!-- KUNDLI PANEL -->
+        <div class="panel" id="panel-kundli">
+            <div class="panel-title">Kundli Birth Chart</div>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Full Name</label>
+                    <input type="text" id="kundli-name" placeholder="Your name…">
+                </div>
+                <div class="form-group">
+                    <label>Birth Day</label>
+                    <input type="number" id="kundli-day" placeholder="DD" min="1" max="31">
+                </div>
+                <div class="form-group">
+                    <label>Birth Month</label>
+                    <input type="number" id="kundli-month" placeholder="MM" min="1" max="12">
+                </div>
+                <div class="form-group">
+                    <label>Birth Year</label>
+                    <input type="number" id="kundli-year" placeholder="YYYY" min="1900" max="2100">
+                </div>
+                <div class="form-group full">
+                    <label>Place of Birth</label>
+                    <input type="text" id="kundli-place" placeholder="City, Country…">
+                </div>
+            </div>
+            <p class="error-msg" id="kundli-error">Please fill in all required fields.</p>
+            <button class="btn" onclick="getKundli()">🔮 Generate My Kundli 🔮</button>
+            <div class="result" id="kundli-result">
+                <div class="kundali-card">
+                    <div class="kundali-header">
+                        <div class="kundali-name" id="kundli-result-name"></div>
+                        <div class="kundali-detail" id="kundli-result-dob"></div>
+                        <div class="kundali-detail" id="kundli-result-place"></div>
+                        <div class="kundali-zodiac" id="kundli-result-zodiac"></div>
+                    </div>
+                    <div class="quotes-section">
+                        <div class="quotes-title">✨ Lucky Quotes for Your Path</div>
+                        <div id="kundli-quotes"></div>
+                    </div>
+                    <div class="special-message" id="kundli-message"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const SIGNS = [
+            { name:"Aries",       symbol:"♈", careers:["Leader","Entrepreneur","Army Officer"],  desc:"Bold, courageous, and fiercely independent. You charge into life with unstoppable energy and passion." },
+            { name:"Taurus",      symbol:"♉", careers:["Banker","Architect","Designer"],          desc:"Steadfast, sensual, and deeply grounded. You build beauty and stability wherever you plant your roots." },
+            { name:"Gemini",      symbol:"♊", careers:["Journalist","Writer","Marketing"],        desc:"Curious, quick-witted, and endlessly adaptable. Your mind dances between worlds with electric grace." },
+            { name:"Cancer",      symbol:"♋", careers:["Doctor","Nurse","Social Worker"],         desc:"Intuitive, nurturing, and deeply empathic. You carry the ocean's wisdom in your heart." },
+            { name:"Leo",         symbol:"♌", careers:["Actor","Politician","Manager"],           desc:"Radiant, generous, and born to lead. The sun itself follows your warmth." },
+            { name:"Virgo",       symbol:"♍", careers:["Analyst","Scientist","Teacher"],          desc:"Precise, devoted, and brilliantly perceptive. You see the pattern others miss in the chaos." },
+            { name:"Libra",       symbol:"♎", careers:["Lawyer","Diplomat","Artist"],             desc:"Harmonious, just, and aesthetically attuned. You weave beauty and balance into the world." },
+            { name:"Scorpio",     symbol:"♏", careers:["Detective","Surgeon","Researcher"],       desc:"Intense, magnetic, and fiercely perceptive. You see through illusions into the hidden truth." },
+            { name:"Sagittarius", symbol:"♐", careers:["Professor","Philosopher","Traveler"],     desc:"Adventurous, philosophical, and wildly free. The horizon is your home." },
+            { name:"Capricorn",   symbol:"♑", careers:["CEO","Engineer","Administrator"],         desc:"Disciplined, ambitious, and mountain-steady. You summit every peak with quiet determination." },
+            { name:"Aquarius",    symbol:"♒", careers:["Innovator","Scientist","Programmer"],     desc:"Visionary, eccentric, and beautifully unconventional. You live in a future others haven't imagined." },
+            { name:"Pisces",      symbol:"♓", careers:["Musician","Poet","Photographer"],         desc:"Dreamy, compassionate, and spiritually deep. You breathe art into the spaces between words." },
+        ];
+
+        const grid = document.getElementById('sign-grid');
+        let selectedSign = null;
+
+        SIGNS.forEach((sign, i) => {
+            const card = document.createElement('button');
+            card.className = 'sign-card';
+            card.innerHTML = `<span class="card-symbol">${sign.symbol}</span><span class="card-name">${sign.name}</span>`;
+            card.onclick = () => {
+                document.querySelectorAll('.sign-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedSign = i;
+                document.getElementById('career-result').classList.remove('show');
+            };
+            grid.appendChild(card);
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', 
+                    (i===0 && tab==='sign') || 
+                    (i===1 && tab==='career') || 
+                    (i===2 && tab==='kundli')
+                );
+            });
+            document.getElementById('panel-sign').classList.toggle('active', tab==='sign');
+            document.getElementById('panel-career').classList.toggle('active', tab==='career');
+            document.getElementById('panel-kundli').classList.toggle('active', tab==='kundli');
+        }
+
+        // ── Self-contained astrology engine (no backend needed) ──────────────
+
+        const ZODIAC_DATA = {
+            Aries:       { element:'Fire',  planet:'Mars',    nakshatra:'Ashwini',        stone:'Red Coral',       quotes:['The cosmos rewards the bold — charge forward with Mars at your back.','Your fire is not recklessness; it is the universe urging you to lead.','Every new beginning is an Aries gift to the world.'], message: n=>`${n}, the stars reveal a soul forged in celestial fire — a pioneer whose destiny is to ignite what others only dream of. Mars, your guardian, grants you the courage to begin what others fear, and the strength to finish what many abandon.` },
+            Taurus:      { element:'Earth', planet:'Venus',   nakshatra:'Rohini',         stone:'Diamond',         quotes:['Venus blesses your path with beauty, abundance, and lasting joy.','Patience is your superpower; the earth moves slowly but surely for you.','Your roots run deep — stability is your greatest strength.'], message: n=>`${n}, Venus has woven abundance and beauty into the very fabric of your life's path. Your journey is one of patient cultivation — of relationships, of gifts, of lasting legacy.` },
+            Gemini:      { element:'Air',   planet:'Mercury', nakshatra:'Mrigashira',     stone:'Emerald',         quotes:['Mercury lights your mind like a thousand stars at once.','Your curiosity is the universe exploring itself through you.','Two paths always appear — trust that you have the wisdom to choose wisely.'], message: n=>`${n}, Mercury blessed you with a mind that dances between worlds — you are the cosmic messenger, the bridge between ideas and reality. Your life will be rich with stories, connections, and discoveries.` },
+            Cancer:      { element:'Water', planet:'Moon',    nakshatra:'Punarvasu',      stone:'Pearl',           quotes:['The Moon guards your heart — let its tides guide your intuition.','Your empathy is a cosmic gift; never mistake softness for weakness.','Home and heart are your temples; protect them fiercely.'], message: n=>`${n}, the Moon chose you as her beloved child, gifting you with intuition that borders on prophecy and a heart vast enough to hold the sorrows and joys of everyone around you.` },
+            Leo:         { element:'Fire',  planet:'Sun',     nakshatra:'Magha',          stone:'Ruby',            quotes:['The Sun itself placed a crown upon you at the moment of your birth.','Your warmth draws others into orbit — shine without apology.','Leadership is not a choice for you; it is a cosmic calling.'], message: n=>`${n}, the Sun placed its seal upon your soul before you drew your first breath. You are here to illuminate, to lead, and to remind the world that greatness is a duty. Never dim your light.` },
+            Virgo:       { element:'Earth', planet:'Mercury', nakshatra:'Uttara Phalguni',stone:'Emerald',         quotes:['Mercury sharpens your mind into the finest instrument of the cosmos.','Precision and service are the twin pillars of your divine purpose.','The details you notice are the universe whispering its secrets to you.'], message: n=>`${n}, Mercury and the sacred earth combine in you to create a healer, a craftsperson of life. You see the patterns hidden in chaos, and your quiet dedication reshapes the world more profoundly than any grand gesture.` },
+            Libra:       { element:'Air',   planet:'Venus',   nakshatra:'Chitra',         stone:'Diamond',         quotes:['Venus placed her scales in your hands — you are born to restore harmony.','Your sense of justice is written in the stars.','Beauty and balance are not ideals for you; they are necessities of the soul.'], message: n=>`${n}, Venus entrusted you with her scales — you are a living instrument of harmony in a discordant world. Your path winds through relationships, art, and justice, and in each you leave things more beautiful.` },
+            Scorpio:     { element:'Water', planet:'Mars',    nakshatra:'Vishakha',       stone:'Red Coral',       quotes:['Mars and the depths of water forge you into something unbreakable.','Transformation is your birthright; you rise from every ending stronger.','Your intensity is the universe insisting that nothing about you be ordinary.'], message: n=>`${n}, you were born at the intersection of Mars' fire and the ocean's depth — a combination that makes you one of the most powerful souls in the zodiac. Every shadow you have walked through has been preparation for a light only you can carry.` },
+            Sagittarius: { element:'Fire',  planet:'Jupiter', nakshatra:'Mula',           stone:'Yellow Sapphire', quotes:['Jupiter expands every horizon you dare to look toward.','Your arrow always finds its mark — aim for what sets your soul alight.','Truth and freedom are not just values for you; they are oxygen.'], message: n=>`${n}, Jupiter cast his blessing wide across your life map, filling it with wisdom, wandering, and the perpetual thrill of the horizon. Your optimism is a cosmic knowing that the journey will always be worth it.` },
+            Capricorn:   { element:'Earth', planet:'Saturn',  nakshatra:'Uttara Ashadha', stone:'Blue Sapphire',   quotes:['Saturn rewards every step you take on the long road to mastery.','Mountains were made for you; your discipline is legendary among the stars.','Time is on your side — every year adds another layer of unstoppable strength.'], message: n=>`${n}, Saturn looked upon you and saw someone worthy of his most demanding gift: the ability to build empires from patience and time. Your road is long, your ambition ancient, and your eventual legacy immense.` },
+            Aquarius:    { element:'Air',   planet:'Saturn',  nakshatra:'Shatabhisha',    stone:'Blue Sapphire',   quotes:['Saturn and the wind together make you a force that bends the future.','Your vision is decades ahead of the world around you — this is by design.','Revolution flows through your veins; you are here to change things.'], message: n=>`${n}, Saturn and Uranus conspired to create in you a visionary who does not belong entirely to this moment in history. You are ahead of your time by design — the universe needed someone to lay the groundwork for the world that is coming.` },
+            Pisces:      { element:'Water', planet:'Jupiter', nakshatra:'Uttara Bhadrapada', stone:'Yellow Sapphire', quotes:['Jupiter and the ocean merge within you, making you boundlessly compassionate.','Your dreams are not escapes — they are maps to a better reality.','The universe speaks to you in feelings; trust every one of them.'], message: n=>`${n}, Jupiter and Neptune dissolved every boundary between you and the great ocean of cosmic consciousness. You feel what others cannot name, dream what others cannot imagine, and forgive what others cannot release.` },
+        };
+
+        function calcSign(day, month) {
+            const cuts = [[20,1,'Capricorn'],[18,2,'Aquarius'],[20,3,'Pisces'],[19,4,'Aries'],[20,5,'Taurus'],[20,6,'Gemini'],[22,7,'Cancer'],[22,8,'Leo'],[22,9,'Virgo'],[22,10,'Libra'],[21,11,'Scorpio'],[21,12,'Sagittarius']];
+            for (const [d,m,name] of cuts) if (month < m || (month === m && day <= d)) return name;
+            return 'Capricorn';
+        }
+
+        function seedVal(str, num) {
+            let h = 0;
+            for (let i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+            return Math.abs(h + num);
+        }
+
+        const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+        // ── Tab 1: Discover Your Sign ─────────────────────────────────────────
+        function getSign() {
+            const name  = document.getElementById('name').value.trim();
+            const age   = document.getElementById('age').value.trim();
+            const place = document.getElementById('place').value.trim();
+            const day   = parseInt(document.getElementById('day').value);
+            const month = parseInt(document.getElementById('month').value);
+            const errEl    = document.getElementById('sign-error');
+            const resultEl = document.getElementById('sign-result');
+
+            if (!name || !age || !place || !day || !month) {
+                errEl.textContent = 'Please fill in all required fields.';
+                errEl.classList.add('show');
+                resultEl.classList.remove('show');
+                return;
+            }
+            errEl.classList.remove('show');
+
+            const signName = calcSign(day, month);
+            const s = SIGNS.find(s => s.name === signName);
+
+            document.getElementById('result-person').textContent = `${name}, age ${age} · ${place}`;
+            document.getElementById('result-symbol').textContent = s.symbol;
+            document.getElementById('result-sign-name').textContent = signName;
+            document.getElementById('result-description').textContent = s.desc;
+
+            resultEl.classList.remove('show');
+            requestAnimationFrame(() => resultEl.classList.add('show'));
+        }
+
+        // ── Tab 2: Career Guidance ────────────────────────────────────────────
+        function getCareer() {
+            if (selectedSign === null) {
+                let toast = document.getElementById('app-toast');
+                if (!toast) { toast = document.createElement('div'); toast.id='app-toast'; toast.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,140,140,.45);background:rgba(30,10,20,.92);color:#ffd4d4;font-family:serif;font-size:15px;opacity:0;transition:opacity .2s ease;'; document.body.appendChild(toast); }
+                toast.textContent = 'Please select your zodiac sign above.';
+                toast.style.opacity = '1';
+                setTimeout(() => { toast.style.opacity = '0'; }, 2600);
+                return;
+            }
+            const sign = SIGNS[selectedSign];
+            document.getElementById('career-sign-title').textContent = `${sign.symbol}  ${sign.name}`;
+            const list = document.getElementById('career-list');
+            list.innerHTML = '';
+            sign.careers.forEach(c => {
+                const tag = document.createElement('span');
+                tag.className = 'career-tag';
+                tag.textContent = c;
+                list.appendChild(tag);
+            });
+            const r = document.getElementById('career-result');
+            r.classList.remove('show');
+            requestAnimationFrame(() => r.classList.add('show'));
+        }
+
+        // ── Tab 3: Kundli Generator ───────────────────────────────────────────
+        function getKundli() {
+            const name  = document.getElementById('kundli-name').value.trim();
+            const day   = parseInt(document.getElementById('kundli-day').value);
+            const month = parseInt(document.getElementById('kundli-month').value);
+            const year  = parseInt(document.getElementById('kundli-year').value);
+            const place = document.getElementById('kundli-place').value.trim();
+            const errEl    = document.getElementById('kundli-error');
+            const resultEl = document.getElementById('kundli-result');
+            const btn      = document.querySelector('#panel-kundli .btn');
+
+            if (!name || !place || !day || !month || !year) {
+                errEl.textContent = 'Please fill in all required fields.';
+                errEl.classList.add('show'); resultEl.classList.remove('show'); return;
+            }
+            if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > 2100) {
+                errEl.textContent = 'Invalid date. Day: 1–31, Month: 1–12, Year: 1900–2100.';
+                errEl.classList.add('show'); resultEl.classList.remove('show'); return;
+            }
+            errEl.classList.remove('show');
+            btn.textContent = '⟳ Reading the celestial map…';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const signName = calcSign(day, month);
+                const zd = ZODIAC_DATA[signName];
+                const sv = seedVal(name, year);
+                const q = zd.quotes;
+                const quotes = [q[sv % 3], q[(sv+1) % 3], q[(sv+2) % 3]];
+                const signEntry = SIGNS.find(s => s.name === signName);
+
+                document.getElementById('kundli-result-name').textContent   = name;
+                document.getElementById('kundli-result-dob').textContent    = `📅 Born: ${day} ${MONTHS[month-1]} ${year}`;
+                document.getElementById('kundli-result-place').textContent  = `📍 Place: ${place}`;
+                document.getElementById('kundli-result-zodiac').textContent = `${signEntry.symbol} ${signName}  ·  ${zd.element}  ·  ${zd.planet}`;
+
+                const quotesDiv = document.getElementById('kundli-quotes');
+                quotesDiv.innerHTML = '';
+                quotes.forEach(qt => {
+                    const el = document.createElement('div');
+                    el.className = 'quote-item';
+                    el.textContent = qt;
+                    quotesDiv.appendChild(el);
+                });
+
+                document.getElementById('kundli-message').textContent = zd.message(name);
+
+                resultEl.classList.remove('show');
+                requestAnimationFrame(() => resultEl.classList.add('show'));
+
+                btn.textContent = '🔮 Generate My Kundli 🔮';
+                btn.disabled = false;
+            }, 800);
+        }
+    </script>
+
+</body>
+</html>

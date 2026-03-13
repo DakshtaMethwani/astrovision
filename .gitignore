@@ -1,0 +1,18 @@
+# executables
+*.exe
+
+# object files
+*.o
+*.obj
+
+# build folders
+build/
+dist/
+
+# system files
+.DS_Store
+Thumbs.db
+
+# editor files
+.vscode/
+.idea/

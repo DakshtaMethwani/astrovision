@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AstroVision | Compatibility</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#05040f; --panel:#0c0b1e; --border:rgba(180,150,255,.15); --gold:#c9a84c; --gold-light:#f0d080; --violet:#7b5ea7; --violet-bright:#b97fff; --text:#e8e0f0; --text-dim:#9080b0; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Cormorant Garamond',serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 15%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 5%,rgba(255,235,180,.8) 0%,transparent 100%);pointer-events:none;z-index:0;}
+    body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 30%,rgba(80,40,120,.25) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 80% 70%,rgba(40,20,100,.2) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+    .navbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(5,4,15,.85);backdrop-filter:blur(12px);}
+    .logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold-light);letter-spacing:.08em;text-decoration:none;text-shadow:0 0 20px rgba(201,168,76,.4);}
+    .nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+    .nav-links a{color:var(--text-dim);text-decoration:none;font-family:'Cinzel Decorative',serif;font-size:.62rem;letter-spacing:.1em;padding:8px 13px;border-radius:4px;border:1px solid transparent;transition:all .25s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold-light);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08);}
+
+    .container{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:50px 18px 100px;}
+    header{text-align:center;margin-bottom:50px;animation:fadeDown 1s ease both;}
+    .header-ornament{font-size:2rem;color:var(--gold);letter-spacing:1rem;opacity:.7;display:block;margin-bottom:12px;animation:shimmer 4s ease-in-out infinite alternate;}
+    @keyframes shimmer{from{opacity:.5;text-shadow:none;}to{opacity:1;text-shadow:0 0 20px var(--gold-light);}}
+    h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;background:linear-gradient(135deg,var(--gold-light) 0%,var(--violet-bright) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;}
+    .subtitle{font-size:1.1rem;color:var(--text-dim);font-style:italic;margin-top:10px;letter-spacing:.12em;}
+
+    .panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:40px;position:relative;overflow:hidden;animation:fadeUp .6s ease both;}
+    .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--violet-bright),var(--gold),transparent);opacity:.6;}
+    .panel-title{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--gold);letter-spacing:.12em;margin-bottom:28px;display:flex;align-items:center;gap:12px;}
+    .panel-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:.4;}
+
+    .signs-row{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:end;margin-bottom:24px;}
+    .versus{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--text-dim);text-align:center;padding-bottom:14px;}
+    label{display:block;font-family:'Cinzel Decorative',serif;font-size:.68rem;letter-spacing:.18em;color:var(--text-dim);margin-bottom:8px;}
+    select{width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.05rem;outline:none;transition:all .3s;-webkit-appearance:none;}
+    select:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(123,94,167,.2);}
+    select option{background:#0c0b1e;}
+
+    .btn{width:100%;padding:16px;background:linear-gradient(135deg,rgba(123,94,167,.4),rgba(201,168,76,.2));border:1px solid rgba(201,168,76,.4);border-radius:4px;color:var(--gold-light);font-family:'Cinzel Decorative',serif;font-size:.8rem;letter-spacing:.2em;cursor:pointer;transition:all .3s;}
+    .btn:hover{border-color:var(--gold);box-shadow:0 0 25px rgba(201,168,76,.25);transform:translateY(-1px);}
+    .btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+
+    .error-msg{color:#ff7777;font-size:.9rem;font-style:italic;margin-top:12px;display:none;}
+    .error-msg.show{display:block;}
+
+    .result{margin-top:32px;display:none;animation:revealResult .6s ease both;}
+    .result.show{display:block;}
+    @keyframes revealResult{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+    .compat-card{padding:28px;border:1px solid rgba(185,127,255,.2);border-radius:8px;background:rgba(123,94,167,.05);}
+    .compat-signs{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px;}
+    .compat-sign{text-align:center;}
+    .compat-symbol{font-size:2.4rem;display:block;color:var(--gold);}
+    .compat-sname{font-family:'Cinzel Decorative',serif;font-size:.7rem;letter-spacing:.1em;color:var(--text-dim);margin-top:4px;}
+    .compat-heart{font-size:1.8rem;color:#ff7eb3;animation:pulse 2s ease-in-out infinite alternate;}
+    @keyframes pulse{from{opacity:.6;transform:scale(.9);}to{opacity:1;transform:scale(1.1);}}
+
+    .score-label{font-family:'Cinzel Decorative',serif;font-size:.65rem;letter-spacing:.2em;color:var(--text-dim);text-align:center;margin-bottom:8px;}
+    .score-number{font-family:'Cinzel Decorative',serif;font-size:2.8rem;text-align:center;background:linear-gradient(135deg,var(--gold-light),var(--violet-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;}
+    .score-bar-wrap{background:rgba(255,255,255,.06);border-radius:20px;height:8px;overflow:hidden;margin-bottom:20px;}
+    .score-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--violet),var(--gold-light));transition:width 1s ease;width:0;}
+    .compat-text{font-size:1.05rem;color:var(--text-dim);font-style:italic;line-height:1.7;text-align:center;}
+
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:600px){.navbar{padding:14px 20px;flex-direction:column;gap:12px;}.panel{padding:24px 18px;}.signs-row{grid-template-columns:1fr;}.versus{display:none;}}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="logo" href="../index.html">✨ AstroVision</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../zodiac/zodiac.html">Zodiac</a>
+      <a href="compatibility.html" class="active">Compatibility</a>
+      <a href="../lucky/lucky_number.html">Lucky</a>
+      <a href="../vastu/vastu.html">Vastu</a>
+      <a href="../tarot_cards/tarot.html">Tarot</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <span class="header-ornament">❤️ ❤️ ❤️</span>
+      <h1>Compatibility</h1>
+      <p class="subtitle">Discover your cosmic romantic alignment</p>
+    </header>
+
+    <div class="panel">
+      <div class="panel-title">Two Signs · One Destiny</div>
+      <div class="signs-row">
+        <div>
+          <label for="sign1">Your Sign</label>
+          <select id="sign1">
+            <option value="Aries">♈ Aries</option><option value="Taurus">♉ Taurus</option>
+            <option value="Gemini">♊ Gemini</option><option value="Cancer">♋ Cancer</option>
+            <option value="Leo">♌ Leo</option><option value="Virgo">♍ Virgo</option>
+            <option value="Libra">♎ Libra</option><option value="Scorpio">♏ Scorpio</option>
+            <option value="Sagittarius">♐ Sagittarius</option><option value="Capricorn">♑ Capricorn</option>
+            <option value="Aquarius">♒ Aquarius</option><option value="Pisces">♓ Pisces</option>
+          </select>
+        </div>
+        <div class="versus">VS</div>
+        <div>
+          <label for="sign2">Their Sign</label>
+          <select id="sign2">
+            <option value="Aries">♈ Aries</option><option value="Taurus">♉ Taurus</option>
+            <option value="Gemini">♊ Gemini</option><option value="Cancer">♋ Cancer</option>
+            <option value="Leo">♌ Leo</option><option value="Virgo">♍ Virgo</option>
+            <option value="Libra">♎ Libra</option><option value="Scorpio">♏ Scorpio</option>
+            <option value="Sagittarius">♐ Sagittarius</option><option value="Capricorn">♑ Capricorn</option>
+            <option value="Aquarius">♒ Aquarius</option><option value="Pisces">♓ Pisces</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="checkCompatibility()">❤️ Check Compatibility ❤️</button>
+      <p class="error-msg" id="error-msg"></p>
+      <div class="result" id="result">
+        <div class="compat-card">
+          <div class="compat-signs">
+            <div class="compat-sign">
+              <span class="compat-symbol" id="sym1"></span>
+              <span class="compat-sname" id="sname1"></span>
+            </div>
+            <span class="compat-heart">❤️</span>
+            <div class="compat-sign">
+              <span class="compat-symbol" id="sym2"></span>
+              <span class="compat-sname" id="sname2"></span>
+            </div>
+          </div>
+          <div class="score-label">Cosmic Alignment Score</div>
+          <div class="score-number" id="score-num"></div>
+          <div class="score-bar-wrap"><div class="score-bar" id="score-bar"></div></div>
+          <div class="compat-text" id="compat-text"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SYMBOLS = {Aries:"♈",Taurus:"♉",Gemini:"♊",Cancer:"♋",Leo:"♌",Virgo:"♍",Libra:"♎",Scorpio:"♏",Sagittarius:"♐",Capricorn:"♑",Aquarius:"♒",Pisces:"♓"};
+    const API = 'http://localhost:8080';
+
+    async function checkCompatibility() {
+      const s1   = document.getElementById('sign1').value;
+      const s2   = document.getElementById('sign2').value;
+      const btn  = document.querySelector('.btn');
+      const errEl = document.getElementById('error-msg');
+      btn.disabled = true; btn.textContent = '⟳ Aligning the stars…';
+      errEl.classList.remove('show');
+      try {
+        // GET /compatibility/:sign1/:sign2 → { sign1, sign2, score, result }
+        const res = await fetch(`${API}/compatibility/${s1}/${s2}`);
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        const data = await res.json();
+
+        document.getElementById('sym1').textContent   = SYMBOLS[s1] || '✦';
+        document.getElementById('sname1').textContent = s1;
+        document.getElementById('sym2').textContent   = SYMBOLS[s2] || '✦';
+        document.getElementById('sname2').textContent = s2;
+        document.getElementById('score-num').textContent = `${data.score}%`;
+        document.getElementById('compat-text').textContent = data.result || 'A unique cosmic connection.';
+
+        const r = document.getElementById('result');
+        r.classList.remove('show');
+        requestAnimationFrame(() => {
+          r.classList.add('show');
+          setTimeout(() => {
+            document.getElementById('score-bar').style.width = data.score + '%';
+          }, 100);
+        });
+      } catch(e) {
+        errEl.textContent = 'Cannot reach backend. Make sure astrovision.exe is running on port 8080.';
+        errEl.classList.add('show');
+      } finally {
+        btn.disabled = false; btn.textContent = '❤️ Check Compatibility ❤️';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AstroVision | Kundali Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#05040f; --panel:#0c0b1e; --border:rgba(180,150,255,.15); --gold:#c9a84c; --gold-light:#f0d080; --violet:#7b5ea7; --violet-bright:#b97fff; --text:#e8e0f0; --text-dim:#9080b0; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Cormorant Garamond',serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 15%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 5%,rgba(255,235,180,.8) 0%,transparent 100%);pointer-events:none;z-index:0;}
+    body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 30%,rgba(80,40,120,.25) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 80% 70%,rgba(40,20,100,.2) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+    .navbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(5,4,15,.85);backdrop-filter:blur(12px);}
+    .logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold-light);letter-spacing:.08em;text-decoration:none;text-shadow:0 0 20px rgba(201,168,76,.4);}
+    .nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+    .nav-links a{color:var(--text-dim);text-decoration:none;font-family:'Cinzel Decorative',serif;font-size:.62rem;letter-spacing:.1em;padding:8px 13px;border-radius:4px;border:1px solid transparent;transition:all .25s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold-light);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08);}
+
+    .container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:50px 18px 100px;}
+    header{text-align:center;margin-bottom:50px;animation:fadeDown 1s ease both;}
+    .header-ornament{font-size:2rem;color:var(--gold);letter-spacing:1rem;opacity:.7;display:block;margin-bottom:12px;animation:shimmer 4s ease-in-out infinite alternate;}
+    @keyframes shimmer{from{opacity:.5;text-shadow:none;}to{opacity:1;text-shadow:0 0 20px var(--gold-light);}}
+    h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;background:linear-gradient(135deg,var(--gold-light) 0%,var(--violet-bright) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;}
+    .subtitle{font-size:1.1rem;color:var(--text-dim);font-style:italic;margin-top:10px;letter-spacing:.12em;}
+
+    .panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:40px;position:relative;overflow:hidden;animation:fadeUp .6s ease both;}
+    .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--violet-bright),var(--gold),transparent);opacity:.6;}
+    .panel-title{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--gold);letter-spacing:.12em;margin-bottom:28px;display:flex;align-items:center;gap:12px;}
+    .panel-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:.4;}
+
+    .form-group{margin-bottom:20px;}
+    label{display:block;font-family:'Cinzel Decorative',serif;font-size:.7rem;letter-spacing:.15em;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;}
+    input{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.05rem;outline:none;transition:all .3s;}
+    input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(123,94,167,.2);}
+
+    .dob-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .dob-row input{margin:0;}
+
+    .btn{width:100%;padding:16px;background:linear-gradient(135deg,rgba(123,94,167,.4),rgba(201,168,76,.2));border:1px solid rgba(201,168,76,.4);border-radius:4px;color:var(--gold-light);font-family:'Cinzel Decorative',serif;font-size:.8rem;letter-spacing:.2em;cursor:pointer;transition:all .3s;margin-top:12px;}
+    .btn:hover{border-color:var(--gold);box-shadow:0 0 25px rgba(201,168,76,.25);transform:translateY(-1px);}
+    .btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+
+    .error-msg{color:#ff7777;font-size:.9rem;font-style:italic;margin-top:12px;display:none;line-height:1.6;}
+    .error-msg.show{display:block;}
+
+    .result{margin-top:32px;display:none;animation:revealResult .6s ease both;}
+    .result.show{display:block;}
+    @keyframes revealResult{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+    .kundali-card{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:28px;}
+    .kundali-header{text-align:center;margin-bottom:24px;}
+    .kundali-name{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:var(--gold-light);margin-bottom:8px;}
+    .kundali-detail{font-size:1rem;color:var(--text-dim);margin-bottom:4px;line-height:1.6;}
+    .kundali-zodiac{color:var(--gold-light);margin-top:12px;font-size:1.1rem;letter-spacing:.05em;}
+    .kundali-extra{margin-top:12px;font-size:.85rem;color:var(--text-dim);letter-spacing:.06em;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
+
+    .quotes-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--border);}
+    .quotes-title{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--gold);letter-spacing:.12em;margin-bottom:16px;text-transform:uppercase;}
+    .quote-item{background:rgba(123,94,167,.05);border-left:3px solid var(--gold);padding:16px;margin-bottom:12px;border-radius:4px;font-style:italic;color:var(--text);line-height:1.6;}
+    .quote-item:before{content:'✨ ';color:var(--gold-light);}
+
+    .special-message{text-align:center;margin-top:24px;padding:20px;border:1px solid rgba(185,127,255,.2);border-radius:6px;background:rgba(123,94,167,.06);font-size:1.05rem;color:var(--violet-bright);font-style:italic;line-height:1.8;}
+
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:600px){.navbar{padding:14px 20px;flex-direction:column;gap:12px;}.panel{padding:24px 18px;}.dob-row{grid-template-columns:1fr;}.kundali-name{font-size:1.4rem;}}
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="logo" href="../../index.html">✨ AstroVision</a>
+    <div class="nav-links">
+      <a href="../../index.html">Home</a>
+      <a href="../zodiac/zodiac.html">Zodiac</a>
+      <a href="../compatibility/compatibility.html">Compatibility</a>
+      <a href="../lucky/lucky_number.html">Lucky</a>
+      <a href="../vastu/vastu.html">Vastu</a>
+      <a href="../tarot_cards/tarot.html">Tarot</a>
+      <a href="kundali.html" class="active">Kundli</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <span class="header-ornament">🔮 🔮 🔮</span>
+      <h1>Kundali Generator</h1>
+      <p class="subtitle">Discover your personalized astrological chart and cosmic destiny</p>
+    </header>
+
+    <div class="panel">
+      <div class="panel-title">Enter Your Birth Details</div>
+
+      <form id="kundaliForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Your Name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <div class="dob-row">
+            <div>
+              <input type="number" id="day" placeholder="DD" min="1" max="31" required>
+            </div>
+            <div>
+              <input type="number" id="month" placeholder="MM" min="1" max="12" required>
+            </div>
+            <div>
+              <input type="number" id="year" placeholder="YYYY" min="1900" max="2100" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="place">Place of Birth</label>
+          <input type="text" id="place" placeholder="City/Town, Country" required>
+        </div>
+
+        <button type="submit" class="btn">🔮 Generate My Kundali 🔮</button>
+        <p class="error-msg" id="error-msg"></p>
+      </form>
+
+      <div class="result" id="result">
+        <div class="kundali-card">
+          <div class="kundali-header">
+            <div class="kundali-name" id="rname"></div>
+            <div class="kundali-detail" id="rdob"></div>
+            <div class="kundali-detail" id="rplace"></div>
+            <div class="kundali-zodiac" id="rzodiac"></div>
+            <div class="kundali-extra" id="rextra"></div>
+          </div>
+
+          <div class="quotes-section">
+            <div class="quotes-title">✨ Lucky Quotes for Your Path</div>
+            <div id="quotes"></div>
+          </div>
+
+          <div class="special-message" id="message"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Fully self-contained Kundali engine ──────────────────────────────────
+
+    const ZODIAC_DATA = {
+      Aries:       { symbol:'♈', element:'Fire',  planet:'Mars',    nakshatra:'Ashwini',   deity:'Ashwini Kumaras', stone:'Red Coral',   quotes:['The cosmos rewards the bold — charge forward with Mars at your back.','Your fire is not recklessness; it is the universe urging you to lead.','Every new beginning is an Aries gift to the world.'] },
+      Taurus:      { symbol:'♉', element:'Earth', planet:'Venus',   nakshatra:'Rohini',    deity:'Brahma',          stone:'Diamond',     quotes:['Venus blesses your path with beauty, abundance, and lasting joy.','Patience is your superpower; the earth moves slowly but surely for you.','Your roots run deep — stability is your greatest strength.'] },
+      Gemini:      { symbol:'♊', element:'Air',   planet:'Mercury', nakshatra:'Mrigashira', deity:'Soma',           stone:'Emerald',     quotes:['Mercury lights your mind like a thousand stars at once.','Your curiosity is the universe exploring itself through you.','Two paths always appear — trust that you have the wisdom to choose wisely.'] },
+      Cancer:      { symbol:'♋', element:'Water', planet:'Moon',    nakshatra:'Punarvasu',  deity:'Aditi',          stone:'Pearl',       quotes:['The Moon guards your heart — let its tides guide your intuition.','Your empathy is a cosmic gift; never mistake softness for weakness.','Home and heart are your temples; protect them fiercely.'] },
+      Leo:         { symbol:'♌', element:'Fire',  planet:'Sun',     nakshatra:'Magha',      deity:'Pitrs',          stone:'Ruby',        quotes:['The Sun itself placed a crown upon you at the moment of your birth.','Your warmth draws others into orbit — shine without apology.','Leadership is not a choice for you; it is a cosmic calling.'] },
+      Virgo:       { symbol:'♍', element:'Earth', planet:'Mercury', nakshatra:'Uttara Phalguni', deity:'Aryaman',   stone:'Emerald',     quotes:['Mercury sharpens your mind into the finest instrument of the cosmos.','Precision and service are the twin pillars of your divine purpose.','The details you notice are the universe whispering its secrets to you.'] },
+      Libra:       { symbol:'♎', element:'Air',   planet:'Venus',   nakshatra:'Chitra',     deity:'Vishvakarma',    stone:'Diamond',     quotes:['Venus placed her scales in your hands — you are born to restore harmony.','Your sense of justice is written in the stars.','Beauty and balance are not ideals for you; they are necessities of the soul.'] },
+      Scorpio:     { symbol:'♏', element:'Water', planet:'Mars',    nakshatra:'Vishakha',   deity:'Indra-Agni',     stone:'Red Coral',   quotes:['Mars and the depths of water forge you into something unbreakable.','Transformation is your birthright; you rise from every ending stronger.','Your intensity is the universe insisting that nothing about you be ordinary.'] },
+      Sagittarius: { symbol:'♐', element:'Fire',  planet:'Jupiter', nakshatra:'Mula',       deity:'Nirriti',        stone:'Yellow Sapphire', quotes:['Jupiter expands every horizon you dare to look toward.','Your arrow always finds its mark — aim for what sets your soul alight.','Truth and freedom are not just values for you; they are oxygen.'] },
+      Capricorn:   { symbol:'♑', element:'Earth', planet:'Saturn',  nakshatra:'Uttara Ashadha', deity:'Vishvedeva', stone:'Blue Sapphire', quotes:['Saturn rewards every step you take on the long road to mastery.','Mountains were made for you; your discipline is legendary among the stars.','Time is on your side — every year adds another layer of unstoppable strength.'] },
+      Aquarius:    { symbol:'♒', element:'Air',   planet:'Saturn',  nakshatra:'Shatabhisha', deity:'Varuna',        stone:'Blue Sapphire', quotes:['Saturn and the wind together make you a force that bends the future.','Your vision is decades ahead of the world around you — this is by design.','Revolution flows through your veins; you are here to change things.'] },
+      Pisces:      { symbol:'♓', element:'Water', planet:'Jupiter', nakshatra:'Uttara Bhadrapada', deity:'Ahir Budhanya', stone:'Yellow Sapphire', quotes:['Jupiter and the ocean merge within you, making you boundlessly compassionate.','Your dreams are not escapes — they are maps to a better reality.','The universe speaks to you in feelings; trust every one of them.'] },
+    };
+
+    const MESSAGES = {
+      Aries:       n => `${n}, the stars reveal a soul forged in celestial fire — a pioneer whose destiny is to ignite what others only dream of. Mars, your guardian, grants you the courage to begin what others fear, and the strength to finish what many abandon. This lifetime is your grandest adventure; run toward it.`,
+      Taurus:      n => `${n}, Venus has woven abundance and beauty into the very fabric of your life's path. Your journey is one of patient cultivation — of relationships, of gifts, of lasting legacy. The earth beneath your feet is loyal to you; plant your intentions with care and watch them bloom into something magnificent.`,
+      Gemini:      n => `${n}, Mercury blessed you with a mind that dances between worlds — you are the cosmic messenger, the bridge between ideas and reality. Your life will be rich with stories, connections, and discoveries that no single path could ever contain. Embrace the beautiful multiplicity of who you are.`,
+      Cancer:      n => `${n}, the Moon chose you as her beloved child, gifting you with intuition that borders on prophecy and a heart vast enough to hold the sorrows and joys of everyone around you. Your home — wherever you build it — becomes sacred ground. Guard your emotional world as fiercely as you tend to others'.`,
+      Leo:         n => `${n}, the Sun placed its seal upon your soul before you drew your first breath. You are here to illuminate, to lead, and to remind the world that greatness is not arrogance — it is a duty. Your warmth is a healing force; never dim it out of false modesty. The cosmos made you to shine.`,
+      Virgo:       n => `${n}, Mercury and the sacred earth combine in you to create a healer, a craftsperson of life. You see the patterns hidden in chaos, and your quiet dedication reshapes the world more profoundly than any grand gesture. Your service is your power; offer it with pride and without self-diminishment.`,
+      Libra:       n => `${n}, Venus entrusted you with her scales — you are a living instrument of harmony in a discordant world. Your path winds through relationships, art, and justice, and in each you leave things more beautiful and more fair than you found them. The universe needs your particular brand of grace.`,
+      Scorpio:     n => `${n}, you were born at the intersection of Mars' fire and the ocean's depth — a combination that makes you one of the most powerful souls in the zodiac. You do not merely endure transformation; you master it. Every shadow you have walked through has been preparation for a light only you can carry.`,
+      Sagittarius: n => `${n}, Jupiter cast his blessing wide across your life map, filling it with wisdom, wandering, and the perpetual thrill of the horizon. You are the philosopher-adventurer, equally at home in distant lands and distant ideas. Your optimism is not naïveté — it is a cosmic knowing that the journey will always be worth it.`,
+      Capricorn:   n => `${n}, Saturn looked upon you and saw someone worthy of his most demanding gift: the ability to build empires from patience and time. Your road is long, your ambition ancient, and your eventual legacy immense. Every obstacle is a stone you lay into the foundation of something future generations will marvel at.`,
+      Aquarius:    n => `${n}, Saturn and Uranus conspired to create in you a visionary who does not belong entirely to this moment in history. You are ahead of your time by design — the universe needed someone to lay the groundwork for the world that is coming. Your uniqueness is not a quirk; it is a cosmic appointment.`,
+      Pisces:      n => `${n}, Jupiter and Neptune dissolved every boundary between you and the great ocean of cosmic consciousness. You feel what others cannot name, dream what others cannot imagine, and forgive what others cannot release. Your sensitivity is your greatest strength — a direct line to the divine that runs through your every breath.`,
+    };
+
+    function getZodiacSign(day, month) {
+      const cutoffs = [
+        [20,1,'Capricorn'],[18,2,'Aquarius'],[20,3,'Pisces'],[19,4,'Aries'],
+        [20,5,'Taurus'],[20,6,'Gemini'],[22,7,'Cancer'],[22,8,'Leo'],
+        [22,9,'Virgo'],[22,10,'Libra'],[21,11,'Scorpio'],[21,12,'Sagittarius']
+      ];
+      for (const [d,m,name] of cutoffs) {
+        if (month < m || (month === m && day <= d)) return name;
+      }
+      return 'Capricorn';
+    }
+
+    // Deterministic seed → picks quotes/variant without randomness changing on reload
+    function seed(name, year) {
+      let h = 0;
+      for (let i = 0; i < name.length; i++) h = (Math.imul(31, h) + name.charCodeAt(i)) | 0;
+      return Math.abs(h + year);
+    }
+
+    function generateKundali(name, day, month, year, place) {
+      const signName = getZodiacSign(day, month);
+      const d = ZODIAC_DATA[signName];
+      const s = seed(name, year);
+
+      // Pick 3 quotes (rotate based on seed so different people get variety)
+      const q = d.quotes;
+      const startIdx = s % q.length;
+      const quotes = [q[startIdx % 3], q[(startIdx+1) % 3], q[(startIdx+2) % 3]];
+
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      return {
+        name,
+        date_of_birth: `${day} ${months[month-1]} ${year}`,
+        place_of_birth: place,
+        zodiac_sign: `${d.symbol} ${signName}`,
+        nakshatra: d.nakshatra,
+        deity: d.deity,
+        ruling_planet: d.planet,
+        element: d.element,
+        lucky_stone: d.stone,
+        lucky_quotes: quotes,
+        special_message: MESSAGES[signName](name),
+      };
+    }
+
+    document.getElementById('kundaliForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name  = document.getElementById('name').value.trim();
+      const day   = parseInt(document.getElementById('day').value);
+      const month = parseInt(document.getElementById('month').value);
+      const year  = parseInt(document.getElementById('year').value);
+      const place = document.getElementById('place').value.trim();
+
+      const btn   = e.target.querySelector('button');
+      const errEl = document.getElementById('error-msg');
+      errEl.classList.remove('show');
+
+      if (!name || !place || isNaN(day) || isNaN(month) || isNaN(year) ||
+          day < 1 || day > 31 || month < 1 || month > 12 || year < 1900) {
+        errEl.textContent = 'Please fill in all fields with valid values.';
+        errEl.classList.add('show');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⟳ Reading the celestial map…';
+
+      // Small delay for the dramatic effect, then compute instantly
+      setTimeout(() => {
+        const data = generateKundali(name, day, month, year, place);
+
+        document.getElementById('rname').textContent   = data.name;
+        document.getElementById('rdob').textContent    = `📅 Born: ${data.date_of_birth}`;
+        document.getElementById('rplace').textContent  = `📍 Place: ${data.place_of_birth}`;
+        document.getElementById('rzodiac').textContent = `${data.zodiac_sign}`;
+
+        // Extra fields — inject below zodiac if elements exist
+        const extraEl = document.getElementById('rextra');
+        if (extraEl) {
+          extraEl.innerHTML =
+            `<span>🌿 ${data.element}</span> &nbsp;·&nbsp; ` +
+            `<span>🪐 ${data.ruling_planet}</span> &nbsp;·&nbsp; ` +
+            `<span>⭐ ${data.nakshatra} Nakshatra</span> &nbsp;·&nbsp; ` +
+            `<span>💎 ${data.lucky_stone}</span>`;
+        }
+
+        const quotesDiv = document.getElementById('quotes');
+        quotesDiv.innerHTML = '';
+        data.lucky_quotes.forEach(q => {
+          const el = document.createElement('div');
+          el.className = 'quote-item';
+          el.textContent = q;
+          quotesDiv.appendChild(el);
+        });
+
+        document.getElementById('message').textContent = data.special_message;
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.classList.remove('show');
+        requestAnimationFrame(() => resultDiv.classList.add('show'));
+
+        btn.disabled = false;
+        btn.textContent = '🔮 Generate My Kundali 🔮';
+      }, 900);
+    });
+  </script>
+</body>
+</html>
